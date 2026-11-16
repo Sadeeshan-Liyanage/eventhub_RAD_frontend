@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #1b1a55;
+  --color-ink-soft: #3a3980;
+  --color-saffron: #f5b301;
+  --color-saffron-deep: #c98f00;
+  --color-paper: #f4f5fa;
+  --color-line: #dcdeee;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-saffron);
+  outline-offset: 2px;
+}
+
+
+
+.stub {
+  --notch: 14px;
+  background:
+    radial-gradient(circle at 0 var(--notch-y, 70%), transparent var(--notch), #fff calc(var(--notch) + 0.5px)) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% var(--notch-y, 70%), transparent var(--notch), #fff calc(var(--notch) + 0.5px)) right / 51% 100% no-repeat;
+  filter: drop-shadow(0 1px 0 var(--color-line)) drop-shadow(0 6px 14px rgba(27, 26, 85, 0.1));
+}
+.tear {
+  border-top: 2px dashed var(--color-line);
+}
+
+@media print {
+  header, .no-print { display: none !important; }
+  body { background: #fff; }
+}

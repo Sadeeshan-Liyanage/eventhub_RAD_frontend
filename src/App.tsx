@@ -4,6 +4,8 @@ import { useAppDispatch } from "./store";
 import { fetchMe, sessionExpired } from "./store/slices/authSlice";
 import { getAccessToken } from "./utils/storage";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ChatWidget from "./components/ChatWidget";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import EventDetails from "./pages/EventDetails";
@@ -27,9 +29,9 @@ export default function App() {
   }, [dispatch]);
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main>
+      <main className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/events/:id" element={<EventDetails />} />
@@ -54,8 +56,8 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-    </>
+      <Footer />
+      <ChatWidget />
+    </div>
   );
 }
-
-

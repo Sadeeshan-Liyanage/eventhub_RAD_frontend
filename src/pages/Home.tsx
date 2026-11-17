@@ -54,7 +54,7 @@ export default function Home() {
       update({ maxPrice: price });
     }, 500);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [price]);
 
   const submit = (e: FormEvent) => {
@@ -65,8 +65,18 @@ export default function Home() {
 
   return (
     <div>
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+            <section className="relative isolate overflow-hidden bg-ink text-white">
+        
+        
+        <img src="/images/hero.jpg" alt="" aria-hidden="true" className="absolute inset-0 -z-10 h-full w-full object-cover" />
+        
+        
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/85 via-ink/65 to-ink/80" />
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-44 backdrop-blur-lg [mask-image:linear-gradient(to_bottom,transparent,black)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-44 bg-gradient-to-b from-transparent to-paper" />
+
+        <div className="mx-auto max-w-6xl px-4 pb-40 pt-14 sm:pb-48 sm:pt-20">
           <h1 className="max-w-2xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
             Workshops, concerts and meetups. Pick your seat and go.
           </h1>
@@ -177,3 +187,5 @@ export default function Home() {
     </div>
   );
 }
+
+

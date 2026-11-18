@@ -7,6 +7,7 @@ import SeatMap from "../components/SeatMap";
 import { ErrorBox, Loader } from "../components/Feedback";
 import { Field, Input, btnAccent, btnGhost, btnPrimary } from "../components/Field";
 import { formatDateTime, formatMoney, formatPrice } from "../utils/format";
+import { PaymentInput } from "../types";
 import { getTiers, seatRanges, tierForSeat } from "../utils/tiers";
 import { getErrorMessage } from "../utils/errors";
 
@@ -55,26 +56,34 @@ export default function EventDetails() {
     });
   };
 
-  const proceed = () => {
-    if (!user) return navigate("/login", { state: { from: location.pathname } });
-    setStep("payment");
-  };
+  const isFree = selected.length > 0 && total === 0;
 
-  const pay = async (e: FormEvent) => {
-    e.preventDefault();
+  const submitBooking = async (payment?: PaymentInput) => {
     setFormError(null);
     setPaying(true);
-    const result = await dispatch(createBooking({ eventId: event._id, seatNumbers: selected, payment: card }));
+    const result = await dispatch(createBooking({ eventId: event._id, seatNumbers: selected, payment }));
     setPaying(false);
     if (createBooking.fulfilled.match(result)) {
       navigate(`/tickets/${result.payload._id}`, { state: { justBooked: true } });
     } else {
       setFormError(result.payload ?? getErrorMessage(result.error));
-      // seats may have been taken meanwhile – refresh the map
+
       dispatch(fetchEvent(event._id));
       setSelected([]);
       setStep("seats");
     }
+  };
+
+  const proceed = () => {
+    if (!user) return navigate("/login", { state: { from: location.pathname } });
+
+    if (isFree) return submitBooking();
+    setStep("payment");
+  };
+
+  const pay = (e: FormEvent) => {
+    e.preventDefault();
+    submitBooking(card);
   };
 
   return (
@@ -147,8 +156,8 @@ export default function EventDetails() {
                       <span className="text-ink-soft">{selected.length ? `Seats ${selectedLabel}` : "No seats selected"}</span>
                       <span className="text-xl font-bold">{formatMoney(total)}</span>
                     </div>
-                    <button className={`${btnAccent} mt-4 w-full`} disabled={selected.length === 0} onClick={proceed}>
-                      {user ? "Continue to payment" : "Log in to book"}
+                    <button className={`${btnAccent} mt-4 w-full`} disabled={selected.length === 0 || paying} onClick={proceed}>
+                      {!user ? "Log in to book" : paying ? "Booking…" : isFree ? "Book for free" : "Continue to payment"}
                     </button>
                   </div>
                 </div>

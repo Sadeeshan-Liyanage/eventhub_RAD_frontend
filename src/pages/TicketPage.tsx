@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { fetchBooking } from "../store/slices/bookingsSlice";
 import { ErrorBox, Loader, SuccessBox } from "../components/Feedback";
 import { btnGhost, btnPrimary } from "../components/Field";
-import { formatDate, formatMoney, formatTime } from "../utils/format";
+import { formatDate, formatPrice, formatTime } from "../utils/format";
 
 export default function TicketPage() {
   const { id } = useParams<{ id: string }>();
@@ -39,7 +39,7 @@ export default function TicketPage() {
           <dl className="grid grid-cols-3 gap-4 p-6">
             <div><dt className="text-xs text-ink-soft">Date</dt><dd className="font-semibold">{formatDate(b.event.date)}</dd></div>
             <div><dt className="text-xs text-ink-soft">Time</dt><dd className="font-semibold">{formatTime(b.event.date)}</dd></div>
-            <div><dt className="text-xs text-ink-soft">Paid</dt><dd className="font-semibold">{formatMoney(b.totalAmount)}</dd></div>
+            <div><dt className="text-xs text-ink-soft">{b.totalAmount === 0 ? "Price" : "Paid"}</dt><dd className="font-semibold">{formatPrice(b.totalAmount)}</dd></div>
             <div className="col-span-2"><dt className="text-xs text-ink-soft">Seats</dt><dd className="font-semibold">
               {b.seatDetails && b.seatDetails.length > 0
                 ? b.seatDetails.map((d) => `${d.seatNumber} (${d.tier})`).join(", ")

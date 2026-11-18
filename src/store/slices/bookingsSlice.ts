@@ -15,7 +15,7 @@ type Cfg = { rejectValue: string };
 
 export const createBooking = createAsyncThunk<
   Booking,
-  { eventId: string; seatNumbers: number[]; payment: PaymentInput },
+  { eventId: string; seatNumbers: number[]; payment?: PaymentInput },
   Cfg
 >("bookings/create", async (body, { rejectWithValue }) => {
   try {

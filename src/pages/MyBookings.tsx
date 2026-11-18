@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { cancelBooking, fetchMyBookings } from "../store/slices/bookingsSlice";
 import { Empty, ErrorBox, Loader } from "../components/Feedback";
 import { btnGhost, btnPrimary } from "../components/Field";
-import { formatDateTime, formatMoney } from "../utils/format";
+import { formatDateTime, formatPrice } from "../utils/format";
 
 export default function MyBookings() {
   const dispatch = useAppDispatch();
@@ -48,7 +48,7 @@ export default function MyBookings() {
                 </div>
                 <p className="mt-1 text-sm text-ink-soft">{formatDateTime(b.event.date)} · {b.event.venue}</p>
                 <p className="mt-2 text-sm">
-                  Seats <strong>{b.seatNumbers.join(", ")}</strong> · {formatMoney(b.totalAmount)} · Code <span className="font-mono">{b.ticketCode}</span>
+                  Seats <strong>{b.seatNumbers.join(", ")}</strong> · {formatPrice(b.totalAmount)} · Code <span className="font-mono">{b.ticketCode}</span>
                 </p>
               </div>
               <div className="flex gap-2">
@@ -62,5 +62,3 @@ export default function MyBookings() {
     </div>
   );
 }
-
-

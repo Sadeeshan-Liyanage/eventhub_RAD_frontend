@@ -15,7 +15,8 @@ const GREETING: Msg = {
 
 const SUGGESTIONS = ["What events are coming up?", "Cheapest tickets?", "Are there any events on 30 Nov?"];
 
-// turns "/events/<id>" into a real link and **text** into bold
+
+
 const renderText = (text: string, onNavigate: () => void): ReactNode =>
   text.split(/(\/events\/[a-f0-9]{24}|\*\*[^*]+\*\*)/g).map((part, i) => {
     if (/^\/events\/[a-f0-9]{24}$/.test(part)) {

@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store";
 import { fetchParticipants } from "../store/slices/analyticsSlice";
 import { Empty, ErrorBox, Loader } from "../components/Feedback";
-import { formatDateTime, formatMoney } from "../utils/format";
+import { formatDateTime, formatMoney, formatTime } from "../utils/format";
 
 export default function Participants() {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +23,7 @@ export default function Participants() {
       {data && (
         <>
           <h1 className="mt-3 text-3xl font-bold tracking-tight">{data.event.title}</h1>
-          <p className="mt-1 text-ink-soft">{data.event.sold} of {data.event.capacity} seats sold · {data.participants.length} booking{data.participants.length === 1 ? "" : "s"}</p>
+          <p className="mt-1 text-ink-soft">{data.event.sold} of {data.event.capacity} seats sold · {data.event.checkedIn} checked in · <Link to={`/dashboard/events/${data.event.id}/check-in`} className="font-semibold text-ink underline">Open check-in</Link></p>
 
           <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-white">
             {data.participants.length === 0 ? (
@@ -37,6 +37,7 @@ export default function Participants() {
                     <th className="px-4 py-3 font-medium">Seats</th>
                     <th className="px-4 py-3 font-medium">Paid</th>
                     <th className="px-4 py-3 font-medium">Ticket</th>
+                    <th className="px-4 py-3 font-medium">Entry</th>
                     <th className="px-4 py-3 font-medium">Booked</th>
                   </tr>
                 </thead>
@@ -48,6 +49,7 @@ export default function Participants() {
                       <td className="px-4 py-3">{p.seatLabels.join(", ")}</td>
                       <td className="px-4 py-3">{formatMoney(p.amount)}</td>
                       <td className="px-4 py-3 font-mono text-xs">{p.ticketCode}</td>
+                      <td className="px-4 py-3">{p.checkedInAt ? `In · ${formatTime(p.checkedInAt)}` : "Not yet"}</td>
                       <td className="px-4 py-3">{formatDateTime(p.bookedAt)}</td>
                     </tr>
                   ))}
@@ -57,10 +59,6 @@ export default function Participants() {
           </div>
         </>
       )}
-
-      
     </div>
   );
 }
-
-

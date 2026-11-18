@@ -16,6 +16,7 @@ import TicketPage from "./pages/TicketPage";
 import Dashboard from "./pages/Dashboard";
 import EventForm from "./pages/EventForm";
 import Participants from "./pages/Participants";
+import CheckIn from "./pages/CheckIn";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -51,6 +52,7 @@ export default function App() {
             <Route path="/dashboard/events/new" element={<EventForm />} />
             <Route path="/dashboard/events/:id/edit" element={<EventForm />} />
             <Route path="/dashboard/events/:id/participants" element={<Participants />} />
+            <Route path="/dashboard/events/:id/check-in" element={<CheckIn />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

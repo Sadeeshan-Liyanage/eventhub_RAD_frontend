@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../api/axios";
-import { AnalyticsOverview, ParticipantsData } from "../../types";
+import { AnalyticsOverview, CheckInResult, ParticipantsData } from "../../types";
 import { getErrorMessage } from "../../utils/errors";
 
 interface AnalyticsState {
@@ -37,6 +37,27 @@ export const fetchParticipants = createAsyncThunk<ParticipantsData, string, Cfg>
   }
 );
 
+export const checkInTicket = createAsyncThunk<CheckInResult, { eventId: string; ticketCode: string }, Cfg>(
+  "analytics/checkIn",
+  async (body, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post("/checkin", body);
+      return data.data;
+    } catch (e) {
+      return rejectWithValue(getErrorMessage(e));
+    }
+  }
+);
+
+export const undoCheckIn = createAsyncThunk<string, string, Cfg>("analytics/undoCheckIn", async (bookingId, { rejectWithValue }) => {
+  try {
+    await api.post("/checkin/undo", { bookingId });
+    return bookingId;
+  } catch (e) {
+    return rejectWithValue(getErrorMessage(e));
+  }
+});
+
 const analyticsSlice = createSlice({
   name: "analytics",
   initialState,
@@ -55,10 +76,11 @@ const analyticsSlice = createSlice({
         s.error = a.payload ?? "Failed to load analytics";
       });
 
-    b.addCase(fetchParticipants.pending, (s) => {
+    b.addCase(fetchParticipants.pending, (s, a) => {
       s.status = "loading";
       s.error = null;
-      s.participants = null;
+      // keep the table on screen when the same event is reloaded
+      if (s.participants?.event.id !== a.meta.arg) s.participants = null;
     })
       .addCase(fetchParticipants.fulfilled, (s, a) => {
         s.status = "idle";
@@ -68,8 +90,22 @@ const analyticsSlice = createSlice({
         s.status = "idle";
         s.error = a.payload ?? "Failed to load participants";
       });
+
+    // keep the attendee list in step with check-ins without reloading it
+    b.addCase(checkInTicket.fulfilled, (s, a) => {
+      const t = a.payload.ticket;
+      if (a.payload.status !== "admitted" || !t || !s.participants) return;
+      const row = s.participants.participants.find((p) => p.bookingId === t.bookingId);
+      if (row) row.checkedInAt = t.checkedInAt;
+      s.participants.event.checkedIn += t.quantity;
+    });
+    b.addCase(undoCheckIn.fulfilled, (s, a) => {
+      const row = s.participants?.participants.find((p) => p.bookingId === a.payload);
+      if (!s.participants || !row || !row.checkedInAt) return;
+      row.checkedInAt = null;
+      s.participants.event.checkedIn -= row.quantity;
+    });
   },
 });
 
 export default analyticsSlice.reducer;
-

@@ -156,6 +156,7 @@ export default function Dashboard() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-2">
+                        {!cancelled && <Link to={`/dashboard/events/${e._id}/check-in`} className={btnAccent}>Check-in</Link>}
                         <Link to={`/dashboard/events/${e._id}/participants`} className={btnGhost}>Attendees</Link>
                         {!cancelled && <Link to={`/dashboard/events/${e._id}/edit`} className={btnGhost}>Edit</Link>}
                         {!cancelled && <button className={btnGhost} onClick={() => handleCancel(e._id)}>Cancel</button>}

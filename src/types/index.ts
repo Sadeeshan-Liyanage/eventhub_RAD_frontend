@@ -62,6 +62,7 @@ export interface Booking {
   event: BookingEventRef;
   user: string | { _id: string; name: string; email: string };
   seatNumbers: number[];
+  checkedInAt?: string | null;
   seatDetails?: { seatNumber: number; tier: string; price: number }[];
   quantity: number;
   totalAmount: number;
@@ -115,7 +116,7 @@ export interface AnalyticsOverview {
 }
 
 export interface ParticipantsData {
-  event: { id: string; title: string; capacity: number; sold: number };
+  event: { id: string; title: string; date: string; capacity: number; sold: number; checkedIn: number };
   participants: {
     bookingId: string;
     name: string;
@@ -124,6 +125,24 @@ export interface ParticipantsData {
     seatLabels: string[];
     amount: number;
     ticketCode: string;
+    quantity: number;
+    checkedInAt: string | null;
     bookedAt: string;
   }[];
+}
+
+export interface CheckInTicket {
+  bookingId: string;
+  name: string;
+  email: string;
+  seats: string[];
+  quantity: number;
+  ticketCode: string;
+  checkedInAt: string | null;
+}
+
+export interface CheckInResult {
+  status: "admitted" | "already_used" | "cancelled" | "wrong_event" | "not_found";
+  message: string;
+  ticket?: CheckInTicket;
 }

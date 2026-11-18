@@ -54,6 +54,7 @@ export default function TicketPage() {
             <QRCodeSVG value={qrValue} size={168} level="M" aria-label="Ticket QR code" />
             <p className="font-mono text-lg font-bold tracking-widest">{b.ticketCode}</p>
             <p className="text-xs text-ink-soft">Show this code at the entrance · Ref {b.paymentRef}</p>
+            {b.checkedInAt && b.status !== "cancelled" && <p className="rounded bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-800">Checked in at the event</p>}
             {b.status === "cancelled" && <p className="rounded bg-red-100 px-3 py-1 text-sm font-semibold text-red-800">This ticket is cancelled</p>}
           </div>
         </div>
